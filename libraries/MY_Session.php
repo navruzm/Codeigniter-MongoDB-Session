@@ -348,6 +348,18 @@ class MY_Session extends CI_Session
         }
     }
 
+    function keep_all_flashdata()
+    {
+        foreach ($this->CI->session->all_userdata() as $key => $value)
+        {
+            if (strpos($key, 'flash:old:') !== FALSE)
+            {
+                $key = str_replace('flash:old:', '', $key);
+                $this->CI->session->keep_flashdata($key);
+            }
+        }
+    }
+
 }
 
 // END Session Class
