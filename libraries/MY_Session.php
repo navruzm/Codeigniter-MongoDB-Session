@@ -284,8 +284,12 @@ class MY_Session extends CI_Session
                 $cookie_data[$val] = $this->userdata[$val];
             }
 
+            $current = $this->CI->mongo_db->{$this->sess_collection_name}->findOne(array('_id' => new MongoId($old_sessid)));
+            $current['_id'] = new MongoId($new_sessid);
             $this->CI->mongo_db->{$this->sess_collection_name}
-                    ->update(array('_id' => new MongoId($old_sessid)), array('$set' => array('last_activity' => $this->now, '_id' => new MongoId($new_sessid))));
+                    ->remove(array('_id' => new MongoId($old_sessid)));
+            $this->CI->mongo_db->{$this->sess_collection_name}
+                    ->insert($current);
         }
 
         // Write the cookie
